@@ -97,148 +97,325 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $id ? 'Edit' : 'Create'; ?> News - DTC Admin</title>
+    <title><?php echo $id ? 'Edit' : 'Create'; ?> News - DTO Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            font-family: 'Geist', sans-serif;
+        }
+
         .maroon-gradient {
-            background: linear-gradient(135deg, #800000 0%, #4D0000 100%);
+            background: linear-gradient(135deg, #6b1212 0%, #8b2828 100%);
+        }
+
+        .sidebar-item {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #d4af37;
+            border-radius: 0 4px 4px 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-item.active::before {
+            opacity: 1;
+        }
+
+        .sidebar-item.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #6b1212;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-textarea {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Geist', sans-serif;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #6b1212;
+            box-shadow: 0 0 0 3px rgba(107, 18, 18, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6b1212, #8b2828);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(107, 18, 18, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1a1a1a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border: 2px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            border: 2px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .image-preview {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(107, 18, 18, 0.15);
+            margin-bottom: 1rem;
+            max-width: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 80%;
+                height: 100vh;
+                z-index: 1000;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: flex;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="flex h-screen">
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div class="maroon-gradient text-white w-64 flex flex-col">
-            <div class="p-6 flex items-center space-x-3">
-                <div class="flex items-center justify-center">
-                    <img src="/assets/misLogo.jpg" alt="DTO Logo" class="h-10 w-auto object-cover rounded-full" loading="lazy">
+        <div class="sidebar maroon-gradient text-white w-72 flex flex-col shadow-2xl">
+            <div class="p-8 border-b border-white/10">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
+                        <img src="/assets/misLogo.jpg" alt="DTO Logo" class="w-10 h-10 rounded-lg object-cover" loading="lazy">
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">DTO Admin</h1>
+                        <p class="text-xs text-white/60">Management</p>
+                    </div>
                 </div>
-                <h1 class="text-xl font-bold">DTC Admin</h1>
             </div>
 
-            <nav class="flex-1 px-4 space-y-2">
-                <a 
-                    href="/admin/dashboard.php?page=announcements" 
-                    class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition"
-                >
-                    <i data-lucide="megaphone" class="w-5 h-5"></i>Announcements
-                </a>
+            <nav class="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
+                <p class="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Back</p>
                 <a 
                     href="/admin/dashboard.php?page=news" 
-                    class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition"
+                    class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10"
                 >
-                    <i data-lucide="newspaper" class="w-5 h-5"></i>News
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    <span class="font-medium">Dashboard</span>
                 </a>
             </nav>
 
-            <div class="p-4 border-t border-maroon-600">
-                <a href="/admin/logout.php" class="block w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-center">
+            <div class="p-6 border-t border-white/10">
+                <a href="/admin/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-200 px-4 py-3 rounded-xl font-semibold transition">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
                     Logout
                 </a>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="main-content flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
-            <div class="bg-white shadow-md p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-maroon-900 flex items-center gap-2">
+            <div class="top-bar bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center shadow-sm">
+                <button class="sidebar-toggle md:hidden" id="sidebarToggle">
+                    <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+                </button>
+                <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
                     <?php if ($id): ?>
-                        <i data-lucide="edit" class="w-8 h-8"></i>Edit News
+                        <div class="p-2 bg-purple-100 rounded-lg"><i data-lucide="edit" class="w-6 h-6 text-purple-600"></i></div>Edit News
                     <?php else: ?>
-                        <i data-lucide="newspaper" class="w-8 h-8"></i>New News
+                        <div class="p-2 bg-purple-100 rounded-lg"><i data-lucide="plus-circle" class="w-6 h-6 text-purple-600"></i></div>New News
                     <?php endif; ?>
                 </h2>
-                <a 
-                    href="/admin/dashboard.php?page=news" 
-                    class="text-maroon-900 hover:text-maroon-700 font-semibold transition"
-                >
-                    ← Back
-                </a>
             </div>
 
             <!-- Content Area -->
-            <div class="flex-1 overflow-auto p-6">
-                <div class="max-w-4xl">
+            <div class="flex-1 overflow-auto p-4 md:p-8">
+                <div class="max-w-4xl mx-auto">
                     <?php if ($error): ?>
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-                        <?php echo $error; ?>
+                    <div class="alert alert-error">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                            <span><?php echo $error; ?></span>
+                        </div>
                     </div>
                     <?php endif; ?>
 
                     <?php if ($success): ?>
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-                        ✓ <?php echo $success; ?>
-                        <?php if (!$id): ?>
-                            <br><a href="/admin/manage_news.php?id=<?php echo $pdo->lastInsertId(); ?>" class="underline">Edit this news</a>
-                        <?php endif; ?>
+                    <div class="alert alert-success">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            <span><?php echo $success; ?></span>
+                        </div>
                     </div>
                     <?php endif; ?>
 
-                    <form method="POST" enctype="multipart/form-data" class="bg-white rounded-lg shadow-md p-8 space-y-6">
-                        <div>
-                            <label for="title" class="block text-gray-700 font-semibold mb-2">Title</label>
+                    <form method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow-md p-6 md:p-8 space-y-6">
+                        <div class="form-group">
+                            <label for="title" class="form-label">
+                                <i data-lucide="heading-1" class="w-4 h-4 inline-block mr-2"></i>Title
+                            </label>
                             <input 
                                 type="text" 
                                 id="title" 
                                 name="title" 
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                placeholder="News title"
+                                class="form-input" 
+                                placeholder="Enter news title"
                                 value="<?php echo $news ? htmlspecialchars($news['title']) : ''; ?>"
                                 required
                             >
                         </div>
 
-                        <div>
-                            <label for="image" class="block text-gray-700 font-semibold mb-2">Featured Image</label>
+                        <div class="form-group">
+                            <label for="image" class="form-label">
+                                <i data-lucide="image" class="w-4 h-4 inline-block mr-2"></i>Featured Image
+                            </label>
                             <?php if ($news && $news['image']): ?>
                             <div class="mb-4">
-                                <p class="text-sm text-gray-600 mb-2">Current Image:</p>
-                                <img src="/assets/uploads/news/<?php echo htmlspecialchars($news['image']); ?>" alt="Current image" class="w-48 h-auto rounded-lg shadow-md">
+                                <p class="text-sm text-gray-600 mb-3 font-medium">Current Image:</p>
+                                <img src="/assets/uploads/news/<?php echo htmlspecialchars($news['image']); ?>" alt="Current image" class="image-preview">
                             </div>
                             <?php endif; ?>
                             <input 
                                 type="file" 
                                 id="image" 
                                 name="image" 
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
+                                class="form-input" 
                                 accept="image/jpeg,image/png,image/gif,image/webp"
                             >
                             <p class="text-xs text-gray-500 mt-2">Max 5MB. Formats: JPG, PNG, GIF, WebP</p>
                         </div>
 
-                        <div>
-                            <label for="content" class="block text-gray-700 font-semibold mb-2">Content</label>
+                        <div class="form-group">
+                            <label for="content" class="form-label">
+                                <i data-lucide="file-text" class="w-4 h-4 inline-block mr-2"></i>Content
+                            </label>
                             <textarea 
                                 id="content" 
                                 name="content" 
-                                rows="12"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
+                                rows="14"
+                                class="form-textarea" 
                                 placeholder="Enter news content..."
                                 required
                             ><?php echo $news ? htmlspecialchars($news['content']) : ''; ?></textarea>
                         </div>
 
                         <?php if ($news): ?>
-                        <div class="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
-                            <p>Created: <?php echo date('F d, Y g:i A', strtotime($news['date_published'])); ?></p>
-                            <p>Last updated: <?php echo date('F d, Y g:i A', strtotime($news['date_updated'])); ?></p>
+                        <div class="bg-gray-50 border-l-4 border-gray-400 p-4 rounded">
+                            <p class="text-sm text-gray-700"><strong>Created:</strong> <?php echo date('F d, Y g:i A', strtotime($news['date_published'])); ?></p>
+                            <p class="text-sm text-gray-700"><strong>Last Updated:</strong> <?php echo date('F d, Y g:i A', strtotime($news['date_updated'])); ?></p>
                         </div>
                         <?php endif; ?>
 
-                        <div class="flex gap-4">
+                        <div class="flex form-buttons gap-4 pt-4">
                             <button 
                                 type="submit" 
-                                class="maroon-gradient text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition flex items-center gap-2"
+                                class="btn-primary"
                             >
                                 <i data-lucide="<?php echo $id ? 'save' : 'plus-circle'; ?>" class="w-5 h-5"></i><?php echo $id ? 'Update News' : 'Create News'; ?>
                             </button>
                             <a 
                                 href="/admin/dashboard.php?page=news" 
-                                class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-400 transition"
+                                class="btn-secondary"
                             >
-                                Cancel
+                                <i data-lucide="x" class="w-5 h-5"></i>Cancel
                             </a>
                         </div>
                     </form>
@@ -247,12 +424,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
     <script>
-        // Initialize Lucide icons after DOM is ready
+        // Initialize Lucide icons
         document.addEventListener('DOMContentLoaded', function() {
             if (window.lucide) {
                 lucide.createIcons();
             }
         });
+
+        // Mobile Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+
+            // Close sidebar when clicking on a nav item
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            });
+
+            // Close sidebar when clicking outside on mobile
+            if (mainContent) {
+                mainContent.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>

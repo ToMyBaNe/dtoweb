@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         placeholder="Enter your username"
                         required
                     >
-                    <p class="text-xs text-gray-500 mt-1">Demo: admin</p>
+                
                 </div>
 
                 <div>
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         placeholder="Enter your password"
                         required
                     >
-                    <p class="text-xs text-gray-500 mt-1">Demo: admin123</p>
+                   
                 </div>
 
                 <button 
@@ -108,10 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
 
-        <div class="mt-8 bg-white/10 rounded-lg p-4 text-white text-sm text-center">
-            <p>Default Admin Credentials:</p>
-            <p class="font-mono">Username: admin | Password: admin123</p>
-        </div>
+
     <script>
         // Initialize Lucide icons after DOM is ready
         document.addEventListener('DOMContentLoaded', function() {

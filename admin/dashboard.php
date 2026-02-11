@@ -226,12 +226,247 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
             color: rgba(107, 18, 18, 0.2);
             margin-bottom: 1rem;
         }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .flex.h-screen {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: flex;
+            }
+
+            .main-content {
+                flex: 1;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 80%;
+                height: 100vh;
+                z-index: 1000;
+                flex-direction: column;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .sidebar.active {
+                display: flex;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .top-bar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .top-bar h2 {
+                font-size: 1.5rem;
+            }
+
+            .empty-state {
+                padding: 2rem 1rem;
+            }
+
+            .new-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.65rem 1rem;
+            }
+
+            .action-btn {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            .status-badge {
+                padding: 0.35rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            .sidebar-item span {
+                display: none;
+            }
+
+            .sidebar-item {
+                justify-content: center;
+            }
+
+            nav.flex-1 {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 1rem;
+            }
+
+            .sidebar-item i {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .sidebar {
+                width: 100%;
+            }
+
+            .flex.h-screen {
+                height: auto;
+            }
+
+            body {
+                overflow-x: hidden;
+            }
+
+            .main-content {
+                overflow-x: hidden;
+            }
+
+            .top-bar h2 {
+                font-size: 1.25rem;
+            }
+
+            .top-bar h2 i {
+                width: 20px;
+                height: 20px;
+            }
+
+            table {
+                font-size: 0.75rem;
+                overflow-x: auto;
+            }
+
+            table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                padding: 1rem;
+            }
+
+            table th {
+                display: none;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                margin-bottom: 0.5rem;
+            }
+
+            table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                font-weight: 600;
+                color: #6b1212;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.5rem;
+                margin: 0.25rem 0;
+            }
+
+            .sidebar-item {
+                padding: 1rem;
+            }
+
+            .empty-state {
+                padding: 1.5rem;
+            }
+
+            .new-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-bar h2 {
+                font-size: 1.1rem;
+            }
+
+            .new-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .action-btn {
+                padding: 0.35rem 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .sidebar-item {
+                padding: 0.75rem;
+            }
+
+            table td {
+                padding-left: 40%;
+            }
+
+            .empty-state {
+                padding: 1rem;
+            }
+
+            .empty-state i {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div class="maroon-gradient text-white w-72 flex flex-col shadow-2xl">
+        <div class="sidebar maroon-gradient text-white w-72 flex flex-col shadow-2xl">
             <div class="p-8 border-b border-white/10">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
@@ -289,9 +524,12 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="main-content flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
-            <div class="bg-white border-b border-gray-200 px-8 py-6 flex justify-between items-center shadow-sm">
+            <div class="top-bar bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center shadow-sm">
+                <button class="sidebar-toggle md:hidden" id="sidebarToggle">
+                    <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+                </button>
                 <div>
                     <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
                         <?php if ($page === 'announcements'): ?>
@@ -691,6 +929,35 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
                 lucide.createIcons();
             }
         });
+
+        // Mobile Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+
+            // Close sidebar when clicking on a nav item
+            document.querySelectorAll('.sidebar a[href*="?page="]').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            });
+
+            // Close sidebar when clicking outside on mobile
+            if (mainContent) {
+                mainContent.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>

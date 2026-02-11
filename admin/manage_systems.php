@@ -100,198 +100,419 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $id ? 'Edit' : 'Create'; ?> System - DTC Admin</title>
+    <title><?php echo $id ? 'Edit' : 'Create'; ?> System - DTO Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .maroon-gradient {
-            background: linear-gradient(135deg, #800000 0%, #4D0000 100%);
-        }
-        body {
+        * {
             font-family: 'Geist', sans-serif;
+        }
+
+        .maroon-gradient {
+            background: linear-gradient(135deg, #6b1212 0%, #8b2828 100%);
+        }
+
+        .sidebar-item {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #d4af37;
+            border-radius: 0 4px 4px 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-item.active::before {
+            opacity: 1;
+        }
+
+        .sidebar-item.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #6b1212;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-textarea {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Geist', sans-serif;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #6b1212;
+            box-shadow: 0 0 0 3px rgba(107, 18, 18, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6b1212, #8b2828);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(107, 18, 18, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1a1a1a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border: 2px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            border: 2px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .image-preview {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(107, 18, 18, 0.15);
+            margin-bottom: 1rem;
+            max-width: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 80%;
+                height: 100vh;
+                z-index: 1000;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: flex;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="flex h-screen">
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div class="maroon-gradient text-white w-64 flex flex-col">
-            <div class="p-6 flex items-center space-x-3">
-                <div class="flex items-center justify-center">
-                    <img src="/assets/misLogo.jpg" alt="DTO Logo" class="h-10 w-auto object-cover rounded-full" loading="lazy">
+        <div class="sidebar maroon-gradient text-white w-72 flex flex-col shadow-2xl">
+            <div class="p-8 border-b border-white/10">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
+                        <img src="/assets/misLogo.jpg" alt="DTO Logo" class="w-10 h-10 rounded-lg object-cover" loading="lazy">
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">DTO Admin</h1>
+                        <p class="text-xs text-white/60">Management</p>
+                    </div>
                 </div>
-                <h1 class="text-xl font-bold">DTC Admin</h1>
             </div>
 
-            <nav class="flex-1 px-4 space-y-2">
-                <a href="/admin/dashboard.php?page=announcements" class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition">
-                    <i data-lucide="megaphone" class="w-5 h-5"></i>Announcements
-                </a>
-                <a href="/admin/dashboard.php?page=news" class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition">
-                    <i data-lucide="newspaper" class="w-5 h-5"></i>News
-                </a>
-                <a href="/admin/dashboard.php?page=calendar" class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition">
-                    <i data-lucide="calendar" class="w-5 h-5"></i>Calendar Events
-                </a>
-                <a href="/admin/dashboard.php?page=systems" class="flex items-center gap-2 px-4 py-3 rounded-lg bg-maroon-800 hover:bg-maroon-800 transition">
-                    <i data-lucide="box" class="w-5 h-5"></i>Systems
+            <nav class="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
+                <p class="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Back</p>
+                <a 
+                    href="/admin/dashboard.php?page=systems" 
+                    class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10"
+                >
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    <span class="font-medium">Dashboard</span>
                 </a>
             </nav>
 
-            <div class="p-4 border-t border-maroon-600">
-                <p class="text-sm text-maroon-100 mb-3">Logged in as: <strong><?php echo htmlspecialchars($_SESSION['admin_username']); ?></strong></p>
-                <a href="/admin/logout.php" class="block w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-center">
+            <div class="p-6 border-t border-white/10">
+                <a href="/admin/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-200 px-4 py-3 rounded-xl font-semibold transition">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
                     Logout
                 </a>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <div class="bg-white shadow p-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-maroon-900 flex items-center gap-2">
-                        <i data-lucide="box" class="w-8 h-8"></i><?php echo $id ? 'Edit System' : 'Create System'; ?>
-                    </h2>
-                    <a href="/admin/dashboard.php?page=systems" class="text-maroon-900 hover:text-maroon-700 font-semibold transition">
-                        ← Back to Systems
-                    </a>
-                </div>
+        <div class="main-content flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <div class="top-bar bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center shadow-sm">
+                <button class="sidebar-toggle md:hidden" id="sidebarToggle">
+                    <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+                </button>
+                <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <?php if ($id): ?>
+                        <div class="p-2 bg-emerald-100 rounded-lg"><i data-lucide="edit" class="w-6 h-6 text-emerald-600"></i></div>Edit System
+                    <?php else: ?>
+                        <div class="p-2 bg-emerald-100 rounded-lg"><i data-lucide="box" class="w-6 h-6 text-emerald-600"></i></div>New System
+                    <?php endif; ?>
+                </h2>
             </div>
 
-            <div class="flex-1 overflow-auto p-6">
-                <div class="bg-white rounded-lg shadow max-w-2xl">
-                    <div class="p-6">
-                        <?php if ($error): ?>
-                        <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                            <?php echo htmlspecialchars($error); ?>
+            <!-- Content Area -->
+            <div class="flex-1 overflow-auto p-4 md:p-8">
+                <div class="max-w-4xl mx-auto">
+                    <?php if ($error): ?>
+                    <div class="alert alert-error">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                            <span><?php echo $error; ?></span>
                         </div>
-                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
 
-                        <?php if ($success): ?>
-                        <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                            <?php echo htmlspecialchars($success); ?>
+                    <?php if ($success): ?>
+                    <div class="alert alert-success">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            <span><?php echo $success; ?></span>
                         </div>
-                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
 
-                        <form method="POST" enctype="multipart/form-data" class="space-y-6">
-                            <div>
-                                <label for="name" class="block text-gray-700 font-semibold mb-2">System Name</label>
-                                <input 
-                                    type="text" 
-                                    id="name" 
-                                    name="name" 
-                                    value="<?php echo $system ? htmlspecialchars($system['name']) : ''; ?>"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                    placeholder="Enter system name..."
-                                    required
-                                >
-                            </div>
+                    <form method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow-md p-6 md:p-8 space-y-6">
+                        <div class="form-group">
+                            <label for="name" class="form-label">
+                                <i data-lucide="box" class="w-4 h-4 inline-block mr-2"></i>System Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                class="form-input" 
+                                placeholder="Enter system name..."
+                                value="<?php echo $system ? htmlspecialchars($system['name']) : ''; ?>"
+                                required
+                            >
+                        </div>
 
-                            <div>
-                                <label for="url" class="block text-gray-700 font-semibold mb-2">System URL</label>
-                                <input 
-                                    type="url" 
-                                    id="url" 
-                                    name="url" 
-                                    value="<?php echo $system ? htmlspecialchars($system['url']) : ''; ?>"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                    placeholder="https://example.com"
-                                    required
-                                >
-                            </div>
+                        <div class="form-group">
+                            <label for="url" class="form-label">
+                                <i data-lucide="link" class="w-4 h-4 inline-block mr-2"></i>System URL
+                            </label>
+                            <input 
+                                type="url" 
+                                id="url" 
+                                name="url" 
+                                class="form-input"
+                                placeholder="https://example.com"
+                                value="<?php echo $system ? htmlspecialchars($system['url']) : ''; ?>"
+                                required
+                            >
+                        </div>
 
-                            <div>
-                                <label for="description" class="block text-gray-700 font-semibold mb-2">Description</label>
-                                <textarea 
-                                    id="description" 
-                                    name="description" 
-                                    rows="5"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                    placeholder="Enter system description..."
-                                ><?php echo $system ? htmlspecialchars($system['description']) : ''; ?></textarea>
-                            </div>
+                        <div class="form-group">
+                            <label for="description" class="form-label">
+                                <i data-lucide="file-text" class="w-4 h-4 inline-block mr-2"></i>Description
+                            </label>
+                            <textarea 
+                                id="description" 
+                                name="description" 
+                                rows="6"
+                                class="form-textarea" 
+                                placeholder="Enter system description..."
+                            ><?php echo $system ? htmlspecialchars($system['description']) : ''; ?></textarea>
+                        </div>
 
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="icon_color" class="block text-gray-700 font-semibold mb-2">Icon Color</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label for="icon_color" class="form-label">
+                                    <i data-lucide="palette" class="w-4 h-4 inline-block mr-2"></i>Icon Color
+                                </label>
+                                <div class="flex gap-3 items-center">
                                     <input 
                                         type="color" 
                                         id="icon_color" 
                                         name="icon_color" 
+                                        class="h-12 w-20 border-2 border-gray-300 rounded-lg cursor-pointer"
                                         value="<?php echo $system ? htmlspecialchars($system['icon_color']) : '#6b1212'; ?>"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900 h-12 cursor-pointer"
                                     >
-                                </div>
-                                <div>
-                                    <label for="display_order" class="block text-gray-700 font-semibold mb-2">Display Order</label>
-                                    <input 
-                                        type="number" 
-                                        id="display_order" 
-                                        name="display_order" 
-                                        value="<?php echo $system ? intval($system['display_order']) : 0; ?>"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                        placeholder="0"
-                                    >
+                                    <span id="color-value" class="text-gray-600 font-medium"><?php echo $system ? htmlspecialchars($system['icon_color']) : '#6b1212'; ?></span>
                                 </div>
                             </div>
 
-                            <div>
-                                <label for="logo" class="block text-gray-700 font-semibold mb-2">Logo/Icon</label>
-                                <?php if ($system && isset($system['logo']) && $system['logo']): ?>
-                                <div class="mb-4 flex items-center gap-4">
-                                    <div class="flex-shrink-0">
-                                        <img src="/assets/uploads/systems/<?php echo htmlspecialchars($system['logo']); ?>" alt="Logo" class="h-20 w-20 object-cover rounded-lg border border-gray-200">
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Current logo: <?php echo htmlspecialchars($system['logo']); ?></p>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
+                            <div class="form-group">
+                                <label for="display_order" class="form-label">
+                                    <i data-lucide="sort" class="w-4 h-4 inline-block mr-2"></i>Display Order
+                                </label>
                                 <input 
-                                    type="file" 
-                                    id="logo" 
-                                    name="logo" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                                    type="number" 
+                                    id="display_order" 
+                                    name="display_order" 
+                                    class="form-input"
+                                    placeholder="0"
+                                    value="<?php echo $system ? intval($system['display_order']) : 0; ?>"
                                 >
-                                <p class="text-xs text-gray-500 mt-2">Max 20MB. Formats: JPG, PNG, GIF, WebP, SVG</p>
                             </div>
+                        </div>
 
-                            <?php if ($system): ?>
-                            <div class="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
-                                <p>Created: <?php echo date('F d, Y g:i A', strtotime($system['created_at'])); ?></p>
-                                <p>Last updated: <?php echo date('F d, Y g:i A', strtotime($system['updated_at'])); ?></p>
+                        <div class="form-group">
+                            <label for="logo" class="form-label">
+                                <i data-lucide="image" class="w-4 h-4 inline-block mr-2"></i>Logo/Icon
+                            </label>
+                            <?php if ($system && isset($system['logo']) && $system['logo']): ?>
+                            <div class="mb-4">
+                                <p class="text-sm text-gray-600 mb-3 font-medium">Current Logo:</p>
+                                <img src="/assets/uploads/systems/<?php echo htmlspecialchars($system['logo']); ?>" alt="Logo" class="image-preview">
                             </div>
                             <?php endif; ?>
+                            <input 
+                                type="file" 
+                                id="logo" 
+                                name="logo" 
+                                class="form-input"
+                                accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                            >
+                            <p class="text-xs text-gray-500 mt-2">Max 20MB. Formats: JPG, PNG, GIF, WebP, SVG</p>
+                        </div>
 
-                            <div class="flex gap-4">
-                                <button 
-                                    type="submit" 
-                                    class="maroon-gradient text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition flex items-center gap-2"
-                                >
-                                    <i data-lucide="<?php echo $id ? 'save' : 'plus-circle'; ?>" class="w-5 h-5"></i><?php echo $id ? 'Update System' : 'Create System'; ?>
-                                </button>
-                                <a 
-                                    href="/admin/dashboard.php?page=systems" 
-                                    class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-400 transition"
-                                >
-                                    Cancel
-                                </a>
-                            </div>
-                        </form>
-                    </div>
+                        <?php if ($system): ?>
+                        <div class="bg-gray-50 border-l-4 border-gray-400 p-4 rounded">
+                            <p class="text-sm text-gray-700"><strong>Created:</strong> <?php echo date('F d, Y g:i A', strtotime($system['created_at'])); ?></p>
+                            <p class="text-sm text-gray-700"><strong>Last Updated:</strong> <?php echo date('F d, Y g:i A', strtotime($system['updated_at'])); ?></p>
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="flex form-buttons gap-4 pt-4">
+                            <button 
+                                type="submit" 
+                                class="btn-primary"
+                            >
+                                <i data-lucide="<?php echo $id ? 'save' : 'plus-circle'; ?>" class="w-5 h-5"></i><?php echo $id ? 'Update System' : 'Create System'; ?>
+                            </button>
+                            <a 
+                                href="/admin/dashboard.php?page=systems" 
+                                class="btn-secondary"
+                            >
+                                <i data-lucide="x" class="w-5 h-5"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     <script>
+        // Initialize Lucide icons
         document.addEventListener('DOMContentLoaded', function() {
             if (window.lucide) {
                 lucide.createIcons();
             }
         });
+
+        // Color picker value display
+        document.getElementById('icon_color').addEventListener('input', function() {
+            document.getElementById('color-value').textContent = this.value;
+        });
+
+        // Mobile Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+
+            // Close sidebar when clicking on a nav item
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            });
+
+            // Close sidebar when clicking outside on mobile
+            if (mainContent) {
+                mainContent.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>
