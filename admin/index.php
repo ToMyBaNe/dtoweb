@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - DTC</title>
+    <title>Admin Login - DTO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <style>
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="flex items-center justify-center">
                     <img src="/assets/misLogo.jpg" alt="DTO Logo" class="h-10 w-auto object-cover rounded-full" loading="lazy">
                 </div>
-                <h1 class="text-3xl font-bold text-maroon-900">DTC Admin</h1>
+                <h1 class="text-3xl font-bold text-maroon-900">DTO Admin</h1>
                 <p class="text-gray-600 mt-2">Manage News & Announcements</p>
             </div>
 
