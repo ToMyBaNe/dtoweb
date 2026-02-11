@@ -63,184 +63,359 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $id ? 'Edit' : 'Create'; ?> Calendar Event - DTC Admin</title>
+    <title><?php echo $id ? 'Edit' : 'Create'; ?> Calendar Event - DTO Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            font-family: 'Geist', sans-serif;
+        }
+
         .maroon-gradient {
-            background: linear-gradient(135deg, #800000 0%, #4D0000 100%);
+            background: linear-gradient(135deg, #6b1212 0%, #8b2828 100%);
+        }
+
+        .sidebar-item {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #d4af37;
+            border-radius: 0 4px 4px 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-item.active::before {
+            opacity: 1;
+        }
+
+        .sidebar-item.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #6b1212;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-textarea {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Geist', sans-serif;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #6b1212;
+            box-shadow: 0 0 0 3px rgba(107, 18, 18, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6b1212, #8b2828);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(107, 18, 18, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1a1a1a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border: 2px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            border: 2px solid #bbf7d0;
+            color: #166534;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 80%;
+                height: 100vh;
+                z-index: 1000;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: flex;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="flex h-screen">
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div class="maroon-gradient text-white w-64 flex flex-col">
-            <div class="p-6 flex items-center space-x-3">
-                <div class="flex items-center justify-center">
-                    <img src="/assets/misLogo.jpg" alt="DTO Logo" class="h-10 w-auto object-cover rounded-full" loading="lazy">
+        <div class="sidebar maroon-gradient text-white w-72 flex flex-col shadow-2xl">
+            <div class="p-8 border-b border-white/10">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
+                        <img src="/assets/misLogo.jpg" alt="DTO Logo" class="w-10 h-10 rounded-lg object-cover" loading="lazy">
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">DTO Admin</h1>
+                        <p class="text-xs text-white/60">Management</p>
+                    </div>
                 </div>
-                <h1 class="text-xl font-bold">DTC Admin</h1>
             </div>
 
-            <nav class="flex-1 px-4 space-y-2">
-                <a 
-                    href="/admin/dashboard.php?page=announcements" 
-                    class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition"
-                >
-                    <i data-lucide="megaphone" class="w-5 h-5"></i>Announcements
-                </a>
-                <a 
-                    href="/admin/dashboard.php?page=news" 
-                    class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition"
-                >
-                    <i data-lucide="newspaper" class="w-5 h-5"></i>News
-                </a>
+            <nav class="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
+                <p class="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Back</p>
                 <a 
                     href="/admin/dashboard.php?page=calendar" 
-                    class="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-maroon-800 transition"
+                    class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10"
                 >
-                    <i data-lucide="calendar" class="w-5 h-5"></i>Calendar Events
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    <span class="font-medium">Dashboard</span>
                 </a>
             </nav>
 
-            <div class="p-4 border-t border-maroon-600">
-                <a href="/admin/logout.php" class="block w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-center">
+            <div class="p-6 border-t border-white/10">
+                <a href="/admin/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-200 px-4 py-3 rounded-xl font-semibold transition">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
                     Logout
                 </a>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="main-content flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
-            <div class="bg-white shadow-md p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-maroon-900 flex items-center gap-2">
+            <div class="top-bar bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center shadow-sm">
+                <button class="sidebar-toggle md:hidden" id="sidebarToggle">
+                    <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+                </button>
+                <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
                     <?php if ($id): ?>
-                        <i data-lucide="edit" class="w-8 h-8"></i>Edit Calendar Event
+                        <div class="p-2 bg-amber-100 rounded-lg"><i data-lucide="edit" class="w-6 h-6 text-amber-600"></i></div>Edit Calendar Event
                     <?php else: ?>
-                        <i data-lucide="calendar" class="w-8 h-8"></i>New Calendar Event
+                        <div class="p-2 bg-amber-100 rounded-lg"><i data-lucide="calendar" class="w-6 h-6 text-amber-600"></i></div>New Calendar Event
                     <?php endif; ?>
                 </h2>
-                <a 
-                    href="/admin/dashboard.php?page=calendar" 
-                    class="text-maroon-900 hover:text-maroon-700 font-semibold transition"
-                >
-                    ← Back
-                </a>
             </div>
 
             <!-- Content Area -->
-            <div class="flex-1 overflow-auto p-6">
-                <div class="max-w-4xl">
+            <div class="flex-1 overflow-auto p-4 md:p-8">
+                <div class="max-w-4xl mx-auto">
                     <?php if ($error): ?>
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-                        <?php echo $error; ?>
+                    <div class="alert alert-error">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                            <span><?php echo $error; ?></span>
+                        </div>
                     </div>
                     <?php endif; ?>
 
                     <?php if ($success): ?>
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-                        ✓ <?php echo $success; ?>
+                    <div class="alert alert-success">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            <span><?php echo $success; ?></span>
+                        </div>
                     </div>
                     <?php endif; ?>
 
-                    <form method="POST" class="bg-white rounded-lg shadow-md p-8 space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="title" class="block text-gray-700 font-semibold mb-2">Event Title</label>
-                                <input 
-                                    type="text" 
-                                    id="title" 
-                                    name="title" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                    placeholder="Event title"
-                                    value="<?php echo $event ? htmlspecialchars($event['title']) : ''; ?>"
-                                    required
-                                >
-                            </div>
+                    <form method="POST" class="bg-white rounded-xl shadow-md p-6 md:p-8 space-y-6">
+                        <div class="form-group">
+                            <label for="title" class="form-label">
+                                <i data-lucide="heading-1" class="w-4 h-4 inline-block mr-2"></i>Event Title
+                            </label>
+                            <input 
+                                type="text" 
+                                id="title" 
+                                name="title" 
+                                class="form-input" 
+                                placeholder="Enter event title"
+                                value="<?php echo $event ? htmlspecialchars($event['title']) : ''; ?>"
+                                required
+                            >
+                        </div>
 
-                            <div>
-                                <label for="event_date" class="block text-gray-700 font-semibold mb-2">Event Date</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label for="event_date" class="form-label">
+                                    <i data-lucide="calendar" class="w-4 h-4 inline-block mr-2"></i>Event Date
+                                </label>
                                 <input 
                                     type="date" 
                                     id="event_date" 
                                     name="event_date" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
+                                    class="form-input"
                                     value="<?php echo $event ? htmlspecialchars($event['event_date']) : ''; ?>"
                                     required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location" class="form-label">
+                                    <i data-lucide="map-pin" class="w-4 h-4 inline-block mr-2"></i>Location
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="location" 
+                                    name="location" 
+                                    class="form-input"
+                                    placeholder="Event location"
+                                    value="<?php echo $event ? htmlspecialchars($event['location']) : ''; ?>"
                                 >
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="start_time" class="block text-gray-700 font-semibold mb-2">Start Time</label>
+                            <div class="form-group">
+                                <label for="start_time" class="form-label">
+                                    <i data-lucide="clock" class="w-4 h-4 inline-block mr-2"></i>Start Time
+                                </label>
                                 <input 
                                     type="time" 
                                     id="start_time" 
                                     name="start_time" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
+                                    class="form-input"
                                     value="<?php echo $event ? htmlspecialchars($event['start_time']) : ''; ?>"
                                 >
                             </div>
 
-                            <div>
-                                <label for="end_time" class="block text-gray-700 font-semibold mb-2">End Time</label>
+                            <div class="form-group">
+                                <label for="end_time" class="form-label">
+                                    <i data-lucide="clock" class="w-4 h-4 inline-block mr-2"></i>End Time
+                                </label>
                                 <input 
                                     type="time" 
                                     id="end_time" 
                                     name="end_time" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
+                                    class="form-input"
                                     value="<?php echo $event ? htmlspecialchars($event['end_time']) : ''; ?>"
                                 >
                             </div>
                         </div>
 
-                        <div>
-                            <label for="location" class="block text-gray-700 font-semibold mb-2">Location</label>
-                            <input 
-                                type="text" 
-                                id="location" 
-                                name="location" 
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                placeholder="Event location"
-                                value="<?php echo $event ? htmlspecialchars($event['location']) : ''; ?>"
-                            >
-                        </div>
-
-                        <div>
-                            <label for="description" class="block text-gray-700 font-semibold mb-2">Description</label>
+                        <div class="form-group">
+                            <label for="description" class="form-label">
+                                <i data-lucide="file-text" class="w-4 h-4 inline-block mr-2"></i>Description
+                            </label>
                             <textarea 
                                 id="description" 
                                 name="description" 
                                 rows="8"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon-900"
-                                placeholder="Event description..."
+                                class="form-textarea" 
+                                placeholder="Enter event description..."
                             ><?php echo $event ? htmlspecialchars($event['description']) : ''; ?></textarea>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="color" class="block text-gray-700 font-semibold mb-2">Event Color</label>
-                                <div class="flex gap-2 items-center">
+                            <div class="form-group">
+                                <label for="color" class="form-label">
+                                    <i data-lucide="palette" class="w-4 h-4 inline-block mr-2"></i>Event Color
+                                </label>
+                                <div class="flex gap-3 items-center">
                                     <input 
                                         type="color" 
                                         id="color" 
                                         name="color" 
-                                        class="h-12 w-20 border border-gray-300 rounded-lg cursor-pointer"
+                                        class="h-12 w-20 border-2 border-gray-300 rounded-lg cursor-pointer"
                                         value="<?php echo $event ? htmlspecialchars($event['color']) : '#6b1212'; ?>"
                                     >
-                                    <span id="color-value" class="text-gray-600"><?php echo $event ? htmlspecialchars($event['color']) : '#6b1212'; ?></span>
+                                    <span id="color-value" class="text-gray-600 font-medium"><?php echo $event ? htmlspecialchars($event['color']) : '#6b1212'; ?></span>
                                 </div>
                             </div>
 
-                            <div class="flex items-end">
-                                <label class="flex items-center gap-2 cursor-pointer">
+                            <div class="form-group flex items-end pb-0.5">
+                                <label class="flex items-center gap-3 cursor-pointer">
                                     <input 
                                         type="checkbox" 
                                         name="active" 
-                                        class="w-5 h-5 rounded border-gray-300"
+                                        class="w-5 h-5 rounded border-2 border-gray-300"
                                         <?php echo (!$event || $event['active']) ? 'checked' : ''; ?>
                                     >
                                     <span class="text-gray-700 font-semibold">Active</span>
@@ -249,24 +424,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
 
                         <?php if ($event): ?>
-                        <div class="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
-                            <p>Created: <?php echo date('F d, Y g:i A', strtotime($event['created_at'])); ?></p>
-                            <p>Last updated: <?php echo date('F d, Y g:i A', strtotime($event['updated_at'])); ?></p>
+                        <div class="bg-gray-50 border-l-4 border-gray-400 p-4 rounded">
+                            <p class="text-sm text-gray-700"><strong>Created:</strong> <?php echo date('F d, Y g:i A', strtotime($event['created_at'])); ?></p>
+                            <p class="text-sm text-gray-700"><strong>Last Updated:</strong> <?php echo date('F d, Y g:i A', strtotime($event['updated_at'])); ?></p>
                         </div>
                         <?php endif; ?>
 
-                        <div class="flex gap-4">
+                        <div class="flex form-buttons gap-4 pt-4">
                             <button 
                                 type="submit" 
-                                class="maroon-gradient text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition flex items-center gap-2"
+                                class="btn-primary"
                             >
                                 <i data-lucide="<?php echo $id ? 'save' : 'plus-circle'; ?>" class="w-5 h-5"></i><?php echo $id ? 'Update Event' : 'Create Event'; ?>
                             </button>
                             <a 
                                 href="/admin/dashboard.php?page=calendar" 
-                                class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-400 transition"
+                                class="btn-secondary"
                             >
-                                Cancel
+                                <i data-lucide="x" class="w-5 h-5"></i>Cancel
                             </a>
                         </div>
                     </form>
@@ -275,17 +450,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
     <script>
-        // Color picker value display
-        document.getElementById('color').addEventListener('input', function() {
-            document.getElementById('color-value').textContent = this.value;
-        });
-
-        // Initialize Lucide icons after DOM is ready
+        // Initialize Lucide icons
         document.addEventListener('DOMContentLoaded', function() {
             if (window.lucide) {
                 lucide.createIcons();
             }
         });
+
+        // Color picker value display
+        document.getElementById('color').addEventListener('input', function() {
+            document.getElementById('color-value').textContent = this.value;
+        });
+
+        // Mobile Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+
+            // Close sidebar when clicking on a nav item
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            });
+
+            // Close sidebar when clicking outside on mobile
+            if (mainContent) {
+                mainContent.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>
