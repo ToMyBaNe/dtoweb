@@ -148,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: #6b1212;
             font-size: 1.5rem;
             cursor: pointer;
+            padding: 0.5rem;
         }
 
         .form-group {
@@ -244,13 +245,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 left: 0;
                 top: 0;
                 width: 80%;
+                max-width: 300px;
                 height: 100vh;
                 z-index: 1000;
                 display: none;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                flex-direction: column;
             }
 
             .sidebar.active {
                 display: flex;
+                transform: translateX(0);
             }
 
             .sidebar-toggle {
@@ -258,9 +264,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             .top-bar {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
+                flex-direction: row;
+                gap: 0.5rem;
+                align-items: center;
+                padding: 1rem;
+            }
+
+            .top-bar h2 {
+                font-size: 1.25rem;
+                flex: 1;
+            }
+
+            .main-content {
+                width: 100%;
             }
 
             .form-buttons {
@@ -272,13 +288,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 width: 100%;
                 justify-content: center;
             }
+
+            .flex-1.overflow-auto {
+                padding: 1rem;
+            }
+
+            .max-w-4xl {
+                max-width: 100%;
+            }
+
+            .bg-white.rounded-xl {
+                padding: 1rem;
+                border-radius: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .top-bar h2 {
+                font-size: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .form-group {
+                margin-bottom: 0.75rem;
+            }
+
+            .form-input,
+            .form-textarea {
+                font-size: 16px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.65rem 1rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div class="sidebar maroon-gradient text-white w-72 flex flex-col shadow-2xl">
+        <div class="sidebar maroon-gradient text-white w-72 flex flex-col shadow-2xl" id="adminSidebar">
             <div class="p-8 border-b border-white/10">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
@@ -315,7 +376,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Top Bar -->
             <div class="top-bar bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center shadow-sm">
                 <button class="sidebar-toggle md:hidden" id="sidebarToggle">
-                    <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
                 </button>
                 <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
                     <?php if ($id): ?>
@@ -433,7 +498,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Mobile Sidebar Toggle
         const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.querySelector('.sidebar');
+        const sidebar = document.getElementById('adminSidebar');
         const mainContent = document.querySelector('.main-content');
 
         if (sidebarToggle) {
@@ -450,14 +515,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 });
             });
 
-            // Close sidebar when clicking outside on mobile
-            if (mainContent) {
-                mainContent.addEventListener('click', function() {
-                    if (window.innerWidth < 768) {
-                        sidebar.classList.remove('active');
-                    }
-                });
-            }
+            // Close sidebar when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!sidebarToggle.contains(e.target) && !sidebar.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
         }
     </script>
 </body>

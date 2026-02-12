@@ -79,6 +79,20 @@ $pdo = getDB();
             align-items: center;
         }
 
+        .nav-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--primary);
+            padding: 0.5rem;
+        }
+
+        nav ul.nav-menu {
+            display: flex;
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -224,7 +238,7 @@ $pdo = getDB();
             gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
-            animation: fadeInUp 1s ease-out 0.2s both;
+            animation: fadeInUp 1s ease-out 0.2s both; 
         }
 
         @keyframes fadeInUp {
@@ -662,364 +676,75 @@ $pdo = getDB();
             margin-bottom: 1rem;
         }
 
-        /* Mobile Navigation Toggle */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-
         /* Responsive */
-        @media (max-width: 1024px) {
-            nav .container {
-                padding: 0 1rem;
-            }
-
-            nav ul {
-                gap: 1.5rem;
-            }
-
-            .section {
-                padding: 4rem 1.5rem;
-            }
-
-            .systems-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            }
-
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
-            }
-        }
-
         @media (max-width: 768px) {
-            nav {
-                padding: 0.75rem 0;
-            }
-
             nav .container {
                 padding: 0 1rem;
             }
 
-            nav ul {
-                gap: 0.75rem;
-            }
-
-            nav a {
-                font-size: 0.85rem;
-                font-weight: 600;
-            }
-
-            .mobile-menu-btn {
+            .nav-menu-toggle {
                 display: block;
-                font-size: 1.75rem;
             }
 
-            .logo {
-                font-size: 1.1rem;
-            }
-
-            .logo img {
-                width: 40px;
-                height: 40px;
-            }
-
-            .hero {
-                margin-top: 65px;
-                min-height: 70vh;
-            }
-
-            .hero-content {
-                max-width: 100%;
-                padding: 0 1.5rem;
-                text-align: center;
-            }
-
-            .hero h1 {
-                font-size: clamp(2rem, 8vw, 3.5rem);
-            }
-
-            .hero p {
-                font-size: clamp(0.9rem, 2.5vw, 1.25rem);
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                gap: 1rem;
-                justify-content: center;
-            }
-
-            .btn {
+            nav ul.nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
                 width: 100%;
-                justify-content: center;
-                font-size: 0.95rem;
-            }
-
-            .section {
-                padding: 3rem 1.25rem;
-            }
-
-            .section-title {
-                font-size: clamp(1.75rem, 5vw, 2.5rem);
-                text-align: center;
-            }
-
-            .section-subtitle {
-                text-align: center;
-                font-size: 0.95rem;
-            }
-
-            .swiper-slide {
-                height: 300px;
-            }
-
-            .carousel-item {
-                display: flex;
-                align-items: flex-end;
-            }
-
-            .carousel-content {
-                padding: 1.5rem;
-            }
-
-            .carousel-content h3 {
-                font-size: 1.2rem;
-            }
-
-            .card-grid {
-                gap: 1.5rem;
-            }
-
-            .card {
-                flex: 0 0 calc(50% - 0.75rem);
-                min-width: 100%;
-                margin: 0 auto;
-            }
-
-            .card-image {
-                height: 160px;
-            }
-
-            .card-date {
-                font-size: 0.8rem;
-            }
-
-            .card-title {
-                font-size: 1.25rem;
-            }
-
-            .card-text {
-                font-size: 0.9rem;
-                -webkit-line-clamp: 2;
-            }
-
-            .article-full {
-                padding: 1.5rem;
-                border-left: 4px solid var(--primary);
-            }
-
-            .article-full h2 {
-                font-size: 1.75rem;
-                margin: 1rem 0 0.75rem;
-            }
-
-            .article-full img {
-                max-height: 300px;
-                margin: 1rem 0;
-            }
-
-            .article-meta {
-                gap: 1rem;
-                font-size: 0.85rem;
-            }
-
-            .article-content {
-                font-size: 0.95rem;
-            }
-
-            .systems-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .system-card {
-                max-width: 100%;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                margin-bottom: 2rem;
-            }
-
-            .footer-col h3 {
-                font-size: 1.1rem;
-                margin-bottom: 1rem;
-            }
-
-            .footer-col a {
-                font-size: 0.9rem;
-                margin-bottom: 0.6rem;
-            }
-
-            .footer-bottom {
-                font-size: 0.85rem;
-            }
-
-            /* Modal Responsive */
-            .modal-content {
-                width: 95%;
-                max-width: 90vw;
-                max-height: 85vh;
-                border-radius: 16px;
-            }
-
-            .modal-header {
-                height: 200px;
-                padding: 1.5rem;
-                border-radius: 16px 16px 0 0;
-            }
-
-            .modal-title {
-                font-size: 1.5rem;
-            }
-
-            .modal-body {
-                padding: 1.5rem;
-            }
-
-            .modal-info {
-                gap: 0.75rem;
-                margin-bottom: 1.5rem;
-                padding-bottom: 1.5rem;
-            }
-
-            .modal-info-item {
-                font-size: 0.85rem;
-            }
-
-            .modal-description {
-                font-size: 0.9rem;
-            }
-
-            .modal-close {
-                width: 36px;
-                height: 36px;
-                top: 1rem;
-                right: 1rem;
-            }
-        }
-
-        @media (max-width: 640px) {
-            nav {
+                flex-direction: column;
+                background: white;
+                border-bottom: 1px solid rgba(107, 18, 18, 0.1);
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+                display: none;
+                gap: 0;
                 padding: 0.5rem 0;
             }
 
+            nav ul.nav-menu.active {
+                display: flex;
+            }
+
+            nav ul.nav-menu li {
+                width: 100%;
+            }
+
+            nav ul.nav-menu a {
+                display: block;
+                padding: 1rem 2rem;
+                border: none;
+            }
+
+            nav ul.nav-menu a::after {
+                display: none;
+            }
+
             nav a {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
             }
 
             .hero {
                 margin-top: 60px;
-                min-height: 60vh;
+                min-height: 70vh;
+            }
+
+            .hero-content {
+                padding: 0 1rem;
             }
 
             .hero h1 {
-                font-size: clamp(1.5rem, 6vw, 2.5rem);
-                word-spacing: normal;
-            }
-
-            .swiper-slide {
-                height: 250px;
-            }
-
-            .card {
-                flex: 0 0 100%;
-                min-width: 100%;
-            }
-
-            .card-image {
-                height: 150px;
-            }
-
-            .article-full {
-                padding: 1rem;
-            }
-
-            .article-full h2 {
-                font-size: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-
-            .btn {
-                padding: 0.65rem 1.25rem;
-                font-size: 0.9rem;
-            }
-
-            .article-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .article-meta span {
-                width: 100%;
-            }
-
-            /* Modal on small screens */
-            .modal-content {
-                width: 100%;
-                max-height: 90vh;
-                border-radius: 16px 16px 0 0;
-                bottom: 0;
-            }
-
-            .modal-header {
-                height: 160px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            nav ul {
-                gap: 0.5rem;
-            }
-
-            nav a {
-                font-size: 0.75rem;
-            }
-
-            .logo {
-                font-size: 1rem;
-            }
-
-            .logo img {
-                width: 35px;
-                height: 35px;
-            }
-
-            .hero h1 {
-                font-size: clamp(1.25rem, 5vw, 2rem);
-            }
-
-            .hero p {
-                font-size: clamp(0.8rem, 2vw, 1rem);
-                margin-bottom: 2rem;
+                font-size: clamp(2.5rem, 8vw, 4rem);
             }
 
             .hero-buttons {
-                gap: 0.75rem;
-                padding: 0 0.5rem;
+                flex-direction: column;
+                gap: 1rem;
             }
 
             .btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
+                width: 100%;
+                justify-content: center;
+                padding: 0.75rem 1.5rem;
             }
 
             .section {
@@ -1027,128 +752,109 @@ $pdo = getDB();
             }
 
             .section-title {
-                font-size: 1.35rem;
+                font-size: clamp(1.75rem, 4vw, 2.5rem);
             }
 
-            .section-subtitle {
-                font-size: 0.9rem;
+            .article-full {
+                padding: 1.5rem;
+            }
+
+            .article-full h2 {
+                font-size: 1.75rem;
+            }
+
+            .card {
+                flex: 0 0 calc(50% - 1rem);
+                min-width: 240px;
             }
 
             .swiper-slide {
+                height: 300px;
+            }
+
+            .swiper-button-next::after,
+            .swiper-button-prev::after {
+                font-size: 16px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 0 auto;
+            }
+
+            .modal-header {
                 height: 200px;
             }
 
-            .carousel-content {
-                padding: 1rem;
-            }
-
-            .carousel-content h3 {
-                font-size: 1rem;
+            .modal-body {
+                padding: 1.5rem;
             }
 
             .card-grid {
                 gap: 1rem;
-                padding-bottom: 0.75rem;
             }
 
+            .article-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
             .card {
                 flex: 0 0 100%;
+                min-width: 100%;
             }
 
-            .card-body {
-                padding: 1.25rem;
+            .section {
+                padding: 2rem 0.75rem;
             }
 
-            .card-date {
-                font-size: 0.75rem;
+            .hero-buttons {
+                gap: 0.75rem;
             }
 
-            .card-title {
-                font-size: 1.1rem;
-                margin-bottom: 0.75rem;
+            .btn {
+                padding: 0.65rem 1.25rem;
+                font-size: 0.9rem;
             }
 
-            .card-text {
-                font-size: 0.85rem;
-                -webkit-line-clamp: 2;
+            .footer-col {
                 margin-bottom: 1rem;
             }
 
-            .article-full {
-                padding: 1rem;
+            .hero h1 {
+                font-size: clamp(1.75rem, 6vw, 2.5rem);
+            }
+
+            .hero p {
+                font-size: clamp(0.9rem, 2vw, 1rem);
                 margin-bottom: 1.5rem;
             }
 
-            .article-full h2 {
-                font-size: 1.35rem;
-                margin: 0.75rem 0 0.5rem;
+            .section-title {
+                font-size: clamp(1.5rem, 3vw, 2rem);
             }
 
-            .article-full img {
-                max-height: 250px;
-                margin: 0.75rem 0;
+            .card-title {
+                font-size: 1.2rem;
             }
 
-            .empty-state {
-                padding: 2rem 1rem;
+            .nav ul.nav-menu a {
+                padding: 0.75rem 1.5rem;
             }
 
-            /* Footer mobile */
-            footer {
-                padding: 2.5rem 1rem 1rem;
-            }
-
-            .footer-col a {
-                font-size: 0.85rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .footer-bottom {
-                padding-top: 1rem;
-                font-size: 0.75rem;
-            }
-
-            /* Modal full screen on mobile */
-            .modal {
-                align-items: flex-end;
-            }
-
-            .modal-content {
-                width: 100%;
-                max-width: 100%;
-                border-radius: 16px 16px 0 0;
-                max-height: 90vh;
-            }
-
-            .modal-header {
-                height: 150px;
-                padding: 1rem;
-                border-radius: 16px 16px 0 0;
-            }
-
-            .modal-title {
-                font-size: 1.35rem;
-            }
-
-            .modal-body {
-                padding: 1rem;
-            }
-
-            .modal-tag {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.8rem;
-                margin-bottom: 0.75rem;
-            }
-
-            .modal-close {
-                width: 32px;
-                height: 32px;
-                top: 0.75rem;
-                right: 0.75rem;
-            }
-
-            .modal-close:hover {
-                transform: none;
+            .container {
+                padding: 0 0.5rem;
             }
         }
 
@@ -1316,15 +1022,19 @@ $pdo = getDB();
                 <img src="/assets/misLogo.jpg" alt="DTO Logo">
                 <span>DTO</span>
             </a>
-            <ul>
+            <button class="nav-menu-toggle" id="navMenuToggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="/" class="<?php echo $section == 'home' ? 'active' : ''; ?>">Home</a></li>
                 <li><a href="/?section=announcements" class="<?php echo $section == 'announcements' ? 'active' : ''; ?>">Announcements</a></li>
                 <li><a href="/?section=news" class="<?php echo $section == 'news' ? 'active' : ''; ?>">News</a></li>
                 <li><a href="/?section=systems" class="<?php echo $section == 'systems' ? 'active' : ''; ?>">Systems</a></li>
             </ul>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i data-lucide="menu"></i>
-            </button>
         </div>
     </nav>
 
@@ -1740,6 +1450,30 @@ $pdo = getDB();
     </footer>
 
     <script>
+        // Mobile Menu Toggle
+        const navMenuToggle = document.getElementById('navMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        if (navMenuToggle) {
+            navMenuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking on a link
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navMenuToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                    navMenu.classList.remove('active');
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             if (window.lucide) {
                 lucide.createIcons();
@@ -1770,7 +1504,7 @@ $pdo = getDB();
             const calendarCarousel = new Swiper('.calendar-carousel', {
                 slidesPerView: 1,
                 spaceBetween: 30,
-                loop: false,
+                loop: true,
                 mousewheel: true,
                 keyboard: {
                     enabled: true,
@@ -1881,23 +1615,6 @@ $pdo = getDB();
                 closeModal();
             }
         });
-
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navMenu = document.querySelector('nav ul');
-        
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', function() {
-                navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
-            });
-
-            // Close menu when clicking on a link
-            document.querySelectorAll('nav ul li a').forEach(link => {
-                link.addEventListener('click', function() {
-                    navMenu.style.display = 'none';
-                });
-            });
-        }
     </script>
 
     <!-- Modal -->
