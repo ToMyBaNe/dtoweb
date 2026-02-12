@@ -104,6 +104,12 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
         .sidebar-item {
             position: relative;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
         
         .sidebar-item::before {
@@ -124,12 +130,31 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
         }
         
         .sidebar-item.active {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(212, 175, 55, 0.15);
+            color: #d4af37;
         }
         
         .sidebar-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(2px);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-item {
+                padding: 0.75rem 0.75rem;
+                margin: 0.35rem 0;
+                font-size: 0.95rem;
+            }
+
+            .sidebar-item i {
+                min-width: 20px;
+            }
+
+            .sidebar-item span {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
         
         .table-row-hover:hover {
@@ -231,242 +256,210 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
             display: none;
             background: none;
             border: none;
-            color: white;
+            color: #6b1212;
             font-size: 1.5rem;
             cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .flex.h-screen {
                 flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
                 height: auto;
-                display: none;
             }
 
-            .sidebar.active {
-                display: flex;
-            }
-
-            .main-content {
-                flex: 1;
-            }
-
-            .sidebar-toggle {
-                display: block;
-            }
-
-            .top-bar {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
+            .maroon-gradient {
                 position: fixed;
                 left: 0;
                 top: 0;
-                width: 80%;
+                width: 75%;
+                max-width: 280px;
                 height: 100vh;
-                z-index: 1000;
-                flex-direction: column;
+                z-index: 999;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
             }
 
-            .sidebar.active {
+            .maroon-gradient.active {
+                transform: translateX(0);
+            }
+
+            .w-72 {
+                width: 75%;
+                max-width: 280px;
+            }
+
+            .sidebar-toggle {
                 display: flex;
-            }
-
-            .main-content {
-                width: 100%;
-            }
-
-            .top-bar {
-                padding: 1rem;
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .top-bar h2 {
-                font-size: 1.5rem;
-            }
-
-            .empty-state {
-                padding: 2rem 1rem;
-            }
-
-            .new-btn {
-                width: 100%;
+                align-items: center;
                 justify-content: center;
-                padding: 0.65rem 1rem;
             }
 
-            .action-btn {
-                padding: 0.4rem 0.75rem;
-                font-size: 0.75rem;
+            .flex-1 {
+                width: 100%;
             }
 
-            table {
+            .bg-white.border-b {
+                padding: 0.75rem 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .text-3xl.font-bold {
+                font-size: 1.25rem;
+                margin: 0;
+                flex: 1;
+            }
+
+            .text-3xl.font-bold i {
+                display: none;
+            }
+
+            .flex-1.overflow-auto {
+                padding: 1rem;
+            }
+
+            .px-8 {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .p-8 {
+                padding: 1rem;
+            }
+
+            .table {
                 font-size: 0.85rem;
             }
 
-            .status-badge {
-                padding: 0.35rem 0.75rem;
-                font-size: 0.75rem;
-            }
-
-            .sidebar-item span {
-                display: none;
-            }
-
-            .sidebar-item {
-                justify-content: center;
-            }
-
-            nav.flex-1 {
+            table thead tr,
+            table tbody tr {
                 display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
-                padding: 1rem;
-            }
-
-            .sidebar-item i {
-                width: 24px;
-                height: 24px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .sidebar {
-                width: 100%;
-            }
-
-            .flex.h-screen {
-                height: auto;
-            }
-
-            body {
-                overflow-x: hidden;
-            }
-
-            .main-content {
-                overflow-x: hidden;
-            }
-
-            .top-bar h2 {
-                font-size: 1.25rem;
-            }
-
-            .top-bar h2 i {
-                width: 20px;
-                height: 20px;
-            }
-
-            table {
-                font-size: 0.75rem;
-                overflow-x: auto;
-            }
-
-            table tbody tr {
-                display: block;
+                border-bottom: 2px solid #f3f4f6;
                 margin-bottom: 1rem;
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                padding: 1rem;
             }
 
-            table th {
-                display: none;
-            }
-
+            table th,
             table td {
-                display: block;
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-                margin-bottom: 0.5rem;
-            }
-
-            table td:before {
-                content: attr(data-label);
-                position: absolute;
-                left: 1rem;
-                font-weight: 600;
-                color: #6b1212;
+                padding: 0.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
             }
 
             .action-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            .flex.gap-2 {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .w-full {
+                width: 100%;
+            }
+
+            .max-w-4xl {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .p-6.md\\:p-8 {
+                padding: 1rem;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
                 width: 100%;
                 justify-content: center;
-                padding: 0.5rem;
-                margin: 0.25rem 0;
-            }
-
-            .sidebar-item {
-                padding: 1rem;
-            }
-
-            .empty-state {
-                padding: 1.5rem;
-            }
-
-            .new-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .section {
-                padding: 1rem;
             }
         }
 
         @media (max-width: 480px) {
-            .top-bar h2 {
+            .m-gatsby-table {
+                font-size: 0.75rem;
+            }
+
+            .px-8 {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            .text-2xl {
                 font-size: 1.1rem;
             }
 
-            .new-btn {
-                padding: 0.5rem 0.75rem;
+            .text-3xl.font-bold {
+                font-size: 1rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem;
                 font-size: 0.8rem;
             }
 
             .action-btn {
-                padding: 0.35rem 0.5rem;
-                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+                font-size: 0.65rem;
             }
 
-            .sidebar {
-                width: 100%;
+            .flex.gap-3 {
+                gap: 0.25rem;
             }
 
-            .sidebar-item {
+            .maroon-gradient {
+                width: 85%;
+                max-width: 100%;
+            }
+
+            .bg-white.border-b {
+                padding: 0.5rem;
+            }
+
+            .p-8 {
                 padding: 0.75rem;
             }
 
-            table td {
-                padding-left: 40%;
-            }
-
-            .empty-state {
-                padding: 1rem;
-            }
-
-            .empty-state i {
-                font-size: 2rem;
+            .text-2xl {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div class="sidebar maroon-gradient text-white w-72 flex flex-col shadow-2xl">
+        <div class="maroon-gradient text-white w-72 flex flex-col shadow-2xl" id="adminSidebar">
             <div class="p-8 border-b border-white/10">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
@@ -524,11 +517,15 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
         </div>
 
         <!-- Main Content -->
-        <div class="main-content flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
-            <div class="top-bar bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center shadow-sm">
-                <button class="sidebar-toggle md:hidden" id="sidebarToggle">
-                    <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+            <div class="bg-white border-b border-gray-200 px-8 py-6 flex justify-between items-center shadow-sm">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
                 </button>
                 <div>
                     <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
@@ -923,41 +920,42 @@ if ($action == 'toggle' && isset($_GET['id']) && isset($_GET['type'])) {
         </div>
     </div>
     <script>
+        // Mobile Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const adminSidebar = document.getElementById('adminSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                adminSidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+
+            // Close sidebar when clicking on overlay
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    adminSidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+
+            // Close sidebar when clicking on a link
+            document.querySelectorAll('.sidebar-item').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        adminSidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                    }
+                });
+            });
+        }
+
         // Initialize Lucide icons after DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             if (window.lucide) {
                 lucide.createIcons();
             }
         });
-
-        // Mobile Sidebar Toggle
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.querySelector('.main-content');
-
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-            });
-
-            // Close sidebar when clicking on a nav item
-            document.querySelectorAll('.sidebar a[href*="?page="]').forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth < 768) {
-                        sidebar.classList.remove('active');
-                    }
-                });
-            });
-
-            // Close sidebar when clicking outside on mobile
-            if (mainContent) {
-                mainContent.addEventListener('click', function() {
-                    if (window.innerWidth < 768) {
-                        sidebar.classList.remove('active');
-                    }
-                });
-            }
-        }
     </script>
 </body>
 </html>
