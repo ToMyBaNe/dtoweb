@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $id ? 'Edit' : 'Create'; ?> System - DTC Admin</title>
+    <title><?php echo $id ? 'Edit' : 'Create'; ?> System - DTO Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="flex items-center justify-center">
                     <img src="/assets/misLogo.jpg" alt="DTO Logo" class="h-10 w-auto object-cover rounded-full" loading="lazy">
                 </div>
-                <h1 class="text-xl font-bold">DTC Admin</h1>
+                <h1 class="text-xl font-bold">DTO Admin</h1>
             </div>
 
             <nav class="flex-1 px-4 space-y-2">
