@@ -13,9 +13,6 @@
                         <li><a href="/?section=announcements"><i data-lucide="megaphone" style="width: 16px; height: 16px;"></i> Announcements</a></li>
                         <li><a href="/?section=news"><i data-lucide="newspaper" style="width: 16px; height: 16px;"></i> News</a></li>
                         <li><a href="/?section=systems"><i data-lucide="box" style="width: 16px; height: 16px;"></i> Systems</a></li>
-                        <?php if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']): ?>
-                            <li><a href="/admin/"><i data-lucide="lock" style="width: 16px; height: 16px;"></i> Login</a></li>
-                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="footer-col">
