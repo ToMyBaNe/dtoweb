@@ -1,6 +1,6 @@
 <?php
 // Home Section - Featured Carousel
-$stmt = $pdo->prepare("SELECT id, title, content, image, date_created as date, 'announcement' as type FROM announcements WHERE active = 1 ORDER BY date_created DESC LIMIT 5");
+$stmt = $pdo->prepare("SELECT id, title, content, image, date_created as date, 'announcements' as type FROM announcements WHERE active = 1 ORDER BY date_created DESC LIMIT 5");
 $stmt->execute();
 $announcements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -26,7 +26,7 @@ $carousel_items = array_slice($carousel_items, 0, 8);
             <div class="swiper-wrapper">
                 <?php foreach ($carousel_items as $item): ?>
                 <div class="swiper-slide">
-                    <div class="carousel-item" style="background-image: url('<?php echo isset($item['image']) && $item['image'] ? ($item['type'] == 'announcement' ? '/assets/uploads/announcements/' : '/assets/uploads/news/') . htmlspecialchars($item['image']) : '/assets/DTO-hero.jpg'; ?>')">
+                    <div class="carousel-item" style="background-image: url('<?php echo isset($item['image']) && $item['image'] ? ($item['type'] == 'announcements' ? '/assets/uploads/announcements/' : '/assets/uploads/news/') . htmlspecialchars($item['image']) : '/assets/DTO-hero.jpg'; ?>')">
                         <div class="carousel-content">
                             <div class="carousel-tag">
                                 <i data-lucide="<?php echo $item['type'] == 'announcement' ? 'megaphone' : 'newspaper'; ?>" style="width: 14px; height: 14px;"></i>
