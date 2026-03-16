@@ -13,6 +13,7 @@
                         <li><a href="/?section=announcements"><i data-lucide="megaphone" style="width: 16px; height: 16px;"></i> Announcements</a></li>
                         <li><a href="/?section=news"><i data-lucide="newspaper" style="width: 16px; height: 16px;"></i> News</a></li>
                         <li><a href="/?section=systems"><i data-lucide="box" style="width: 16px; height: 16px;"></i> Systems</a></li>
+                        <li><a href="/?section=developer"><i data-lucide="code" style="width: 16px; height: 16px;"></i> Developer</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">

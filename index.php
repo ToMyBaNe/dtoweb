@@ -33,6 +33,9 @@ require_once 'includes/header.php';
     <?php elseif ($section == 'systems'): ?>
         <?php require_once 'sections/systems.php'; ?>
 
+    <?php elseif ($section == 'developer'): ?>
+        <?php require_once 'sections/developer.php'; ?>
+
     <?php endif; ?>
 
     <?php require_once 'includes/footer.php'; ?>
