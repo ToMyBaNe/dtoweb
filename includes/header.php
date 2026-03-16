@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="icon" type="image/jpeg" href="/assets/misLogo.jpg">
 </head>
 <body>
     <!-- Navigation -->

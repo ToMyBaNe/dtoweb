@@ -85,6 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->execute([$name, $description, $url, $logo, $icon_color, $display_order]);
                 $success = 'System created successfully!';
                 $id = $pdo->lastInsertId();
+                // Redirect after creation
+                header('Location: /admin/dashboard.php?page=systems');
+                exit;
             }
 
             // Reload the system

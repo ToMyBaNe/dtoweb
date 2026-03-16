@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Digital Transformation Office. All rights reserved. | Crafted with care.</p>
+                <p>&copy; 2026 Digital Transformation Office. All rights reserved. | Version 1.0.0</p>
             </div>
         </div>
     </footer>

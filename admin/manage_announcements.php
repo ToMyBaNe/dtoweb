@@ -82,6 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->execute([$title, $content, $image]);
                 $success = 'Announcement created successfully!';
                 $id = $pdo->lastInsertId();
+                // Redirect after creation
+                header('Location: /admin/dashboard.php?page=announcements');
+                exit;
             }
 
             // Reload the announcement
