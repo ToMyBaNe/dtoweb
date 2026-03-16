@@ -82,6 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->execute([$title, $content, $image]);
                 $success = 'News created successfully!';
                 $id = $pdo->lastInsertId();
+                // Redirect after creation
+                header('Location: /admin/dashboard.php?page=news');
+                exit;
             }
 
             // Reload the news

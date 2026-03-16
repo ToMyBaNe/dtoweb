@@ -49,6 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->execute([$title, $description, $event_date, $start_time, $end_time, $location, $color, $active]);
             $success = 'Event created successfully!';
             $id = $pdo->lastInsertId();
+            // Redirect after creation
+            header('Location: /admin/dashboard.php?page=calendar');
+            exit;
         }
 
         // Reload the event
